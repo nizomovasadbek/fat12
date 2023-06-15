@@ -1,6 +1,7 @@
 #include "console.h"
 
 void printEntry(Entry* entry) {
+    enter();
     printf("Filename: %s\n", entry->filename);
     printf("File attribute: %u\n", entry->fileAttribute);
     printf("File case: %u\n", entry->fileCase);
@@ -13,9 +14,11 @@ void printEntry(Entry* entry) {
     printf("Last modification date: %u\n", entry->lastModificationDate);
     printf("Starting cluster: %u\n", entry->startCluster);
     printf("File size: %u\n", entry->fileSize);
+    leave();
 }
 
 void printBootSector(BootSector* boot) {
+    enter();
     printf("Jump instruction %X-%X-%X\n", boot->jumpInstruction[0], 
         boot->jumpInstruction[1], boot->jumpInstruction[2]);
     printf("OEM identifier: %s\n", boot->oemIdentifier);
@@ -37,4 +40,5 @@ void printBootSector(BootSector* boot) {
     printf("Volume ID: %u\n", boot->volumeId);
     printf("Volume label: %s\n", boot->volumeLabel);
     printf("System identifier: %s\n", boot->identifierString);
+    leave();
 }

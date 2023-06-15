@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 bool readBootSector(BootSector* boot, FILE* disk) {
-    return fread(boot, sizeof(BootSector), 1, disk) == sizeof(BootSector);
+    return fread(boot, sizeof(BootSector), 1, disk);
 }
 
 bool entryRead(Entry* entry, FILE* disk, uint16_t skip) {
