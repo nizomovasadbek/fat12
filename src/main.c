@@ -25,7 +25,6 @@ int main(int argc, char** argv) {
         fclose(disk);
         return BOOTSECTOR_READ_ERROR;
     }
-    printBootSector(boot);
 
     Entry* entry = (Entry*) malloc(sizeof(Entry));
     uint16_t entryStartSector = boot->reserved + boot->fatCount * boot->sectorPerFat;
