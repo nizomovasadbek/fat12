@@ -8,5 +8,6 @@
 
 bool readBootSector(BootSector*, FILE*);
 bool entryRead(Entry*, FILE*, uint16_t);
+uint16_t getEntryFilesCount(FILE*, uint16_t);
 
 #endif

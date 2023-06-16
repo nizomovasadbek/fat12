@@ -26,20 +26,20 @@ int main(int argc, char** argv) {
         return BOOTSECTOR_READ_ERROR;
     }
 
-    Entry* entry = (Entry*) malloc(sizeof(Entry));
     uint16_t entryStartSector = boot->reserved + boot->fatCount * boot->sectorPerFat;
     entryStartSector *= boot->bytesPerSector;
-    if(!entryRead(entry, disk, entryStartSector)) {
-        printf("Error reading entry\n");
-        free(boot);
-        free(entry);
-        fclose(disk);
-        return ENTRY_READ_ERROR;
+    uint16_t entryFilesCount = getEntryFilesCount(disk, entryStartSector);
+    printf("There are %u files\n", entryFilesCount);
+
+    Entry* entries = (Entry*) calloc(entryFilesCount, sizeof(Entry));
+    uint16_t skip = entryStartSector;
+    for(unsigned int i = 0; i < entryFilesCount; i++) {
+        entryRead(&entries[i], disk, skip);
+        skip += 32;
     }
 
-    printEntry(entry);
-
     free(boot);
+    free(entries);
     fclose(disk);
     return 0;
 }
