@@ -10,5 +10,6 @@
 
 void printBootSector(BootSector*);
 void printEntry(Entry*);
+void printSector(uint8_t*);
 
 #endif

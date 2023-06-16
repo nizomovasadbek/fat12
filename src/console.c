@@ -1,5 +1,11 @@
 #include "console.h"
 
+void printSector(uint8_t* data) {
+    FILE* out = fopen("out.bin", "wb");
+    fwrite(data, 512, 1, out);
+    fclose(out);
+}
+
 void printEntry(Entry* entry) {
     enter();
     printf("Filename: %s\n", entry->filename);

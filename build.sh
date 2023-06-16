@@ -17,4 +17,5 @@ dd if=/dev/zero of=$MAIN bs=512 count=2880
 mkfs.fat -F12 $MAIN
 mcopy -i $MAIN test.txt "::test.txt"
 mcopy -i $MAIN $SRC/main.c "::main.c"
+mcopy -i $MAIN README.md "::readme.md"
 mv $MAIN $BUILD/

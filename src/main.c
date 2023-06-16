@@ -35,11 +35,29 @@ int main(int argc, char** argv) {
     uint16_t skip = entryStartSector;
     for(unsigned int i = 0; i < entryFilesCount; i++) {
         entryRead(&entries[i], disk, skip);
+        printf("%u) Filename: %s\t%u Kb\n", (i+1), entries[i].filename, entries[i].fileSize);
         skip += 32;
     }
 
+    // uint8_t fileOrder = 1;
+    // TODO: input file selection
+
+    uint8_t* fat = (uint8_t*) malloc(boot->bytesPerSector);
+
+    readSector(disk, 2, 1, fat);
+    uint16_t temp = 0;
+    uint16_t* format = (uint16_t*) fat;
+    for(unsigned int i = 0; i < 20; i++) {
+        temp = format[i];
+        if(temp & 1) temp >>= 4;
+        else temp &= 0x0FFF;
+        printf("%03X ", temp);
+    }
+    printf("\n");
+
     free(boot);
     free(entries);
+    free(fat);
     fclose(disk);
     return 0;
 }
