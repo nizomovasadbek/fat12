@@ -39,20 +39,27 @@ int main(int argc, char** argv) {
         skip += 32;
     }
 
-    // uint8_t fileOrder = 1;
+    uint8_t fileOrder = 1;
+    Entry* entry = &entries[fileOrder - 1];
     // TODO: input file selection
 
     uint8_t* fat = (uint8_t*) malloc(boot->bytesPerSector);
+    uint16_t currentCluster = entry->startCluster;
+    readSector(disk, boot->reserved, 1, fat);
+    printSector(fat);
 
-    readSector(disk, 2, 1, fat);
-    uint16_t temp = 0;
-    uint16_t* format = (uint16_t*) fat;
-    for(unsigned int i = 0; i < 20; i++) {
-        temp = format[i];
-        if(temp & 1) temp >>= 4;
-        else temp &= 0x0FFF;
-        printf("%03X ", temp);
+    for(unsigned int i = 0; i < 12; i++) {
+        printf("%02X ", fat[i]);
     }
+
+    uint32_t fatIndex = currentCluster * 3 / 2;
+    if(currentCluster & 1) {
+        currentCluster = (*(uint16_t*)(fat + fatIndex)) >> 4;
+    } else {
+        currentCluster = (*(uint16_t*)(fat + fatIndex)) & 0x0FFF;
+    }
+    printf("\nCurrent cluster: %u\n", currentCluster);
+
     printf("\n");
 
     free(boot);

@@ -7,12 +7,11 @@ MAIN=disk.img
 set -e
 
 rm -rf $BUILD
-mkdir $BUILD
-mkdir $BUILD/obj
+mkdir -p $BUILD/obj
 touch $MAIN
-gcc -Wextra -g -Wall -c $SRC/interface.c -o $BUILD/obj/interface.o
-gcc -Wextra -g -Wall -c $SRC/console.c -o $BUILD/obj/console.o
-gcc $BUILD/obj/* $SRC/main.c -o $BUILD/main -Wall -Wextra -g
+gcc -O3 -Wextra -g -Wall -c $SRC/interface.c -o $BUILD/obj/interface.o
+gcc -O3 -Wextra -g -Wall -c $SRC/console.c -o $BUILD/obj/console.o
+gcc -O3 $BUILD/obj/* $SRC/main.c -o $BUILD/main -Wall -Wextra -g
 dd if=/dev/zero of=$MAIN bs=512 count=2880
 mkfs.fat -F12 $MAIN
 mcopy -i $MAIN test.txt "::test.txt"

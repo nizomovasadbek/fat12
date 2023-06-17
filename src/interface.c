@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 void readSector(FILE* disk, uint32_t lba, uint32_t count, void* out) {
-    lba--;
     fseek(disk, lba * 512, SEEK_SET);
     fread(out, 512, count, disk);
 }
