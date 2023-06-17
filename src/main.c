@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "boot.h"
-#include "console.h"
-#include "entry.h"
-#include "interface.h"
-#include "error.h"
+#include "lib/boot.h"
+#include "lib/console.h"
+#include "lib/entry.h"
+#include "lib/interface.h"
+#include "lib/error.h"
 
 int main(int argc, char** argv) {
     if(argc != 2) {

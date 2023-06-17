@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(app)
 file(GLOB SOURCES "src/*.c")
-include_directories(src)
+include_directories(src/lib)
 add_executable(app ${SOURCES})
 add_custom_command(
     TARGET app POST_BUILD

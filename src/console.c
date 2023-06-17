@@ -1,4 +1,4 @@
-#include "console.h"
+#include "lib/console.h"
 
 void printSector(uint8_t* data) {
     FILE* out = fopen("out.bin", "wb");

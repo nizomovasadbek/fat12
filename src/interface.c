@@ -1,6 +1,6 @@
-#include "interface.h"
-#include "boot.h"
-#include "entry.h"
+#include "lib/interface.h"
+#include "lib/boot.h"
+#include "lib/entry.h"
 #include <stdio.h>
 #include <stdlib.h>
 
