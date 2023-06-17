@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     uint16_t currentCluster = entry->startCluster;
     readSector(disk, boot->reserved, 1, fat);
     printSector(fat);
-
+    
     for(unsigned int i = 0; i < 12; i++) {
         printf("%02X ", fat[i]);
     }
