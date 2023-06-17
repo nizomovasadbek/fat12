@@ -52,13 +52,14 @@ int main(int argc, char** argv) {
         printf("%02X ", fat[i]);
     }
 
-    uint32_t fatIndex = currentCluster * 3 / 2;
+    currentCluster = entry->startCluster;
+    uint32_t fatIndex = currentCluster / 2 + currentCluster;
     if(currentCluster & 1) {
-        currentCluster = (*(uint16_t*)(fat + fatIndex)) >> 4;
+        currentCluster = (*(uint16_t*) (fat + fatIndex)) >> 4;
     } else {
-        currentCluster = (*(uint16_t*)(fat + fatIndex)) & 0x0FFF;
+        currentCluster = (*(uint16_t*) (fat + fatIndex)) & 0x0FFF;
     }
-    printf("\nCurrent cluster: %u\n", currentCluster);
+    printf("\nCurrent cluster: %u-%04X\n", currentCluster, currentCluster);
 
     printf("\n");
 
