@@ -3,8 +3,11 @@
 #include "lib/boot.h"
 #include "lib/console.h"
 #include "lib/entry.h"
+#include "lib/fat12.h"
 #include "lib/interface.h"
 #include "lib/error.h"
+
+#define FAT_OFFSET 2
 
 int main(int argc, char** argv) {
     if(argc != 2) {
@@ -39,27 +42,21 @@ int main(int argc, char** argv) {
         skip += 32;
     }
 
-    uint8_t fileOrder = 1;
+    uint32_t fileOrder = 2;
+    //scanf("%u", &fileOrder);
     Entry* entry = &entries[fileOrder - 1];
-    // TODO: input file selection
 
     uint8_t* fat = (uint8_t*) malloc(boot->bytesPerSector);
     uint16_t currentCluster = entry->startCluster;
     readSector(disk, boot->reserved, 1, fat);
-    printSector(fat);
     
     for(unsigned int i = 0; i < 12; i++) {
         printf("%02X ", fat[i]);
     }
 
-    currentCluster = entry->startCluster;
-    uint32_t fatIndex = currentCluster / 2 + currentCluster;
-    if(currentCluster & 1) {
-        currentCluster = (*(uint16_t*) (fat + fatIndex)) >> 4;
-    } else {
-        currentCluster = (*(uint16_t*) (fat + fatIndex)) & 0x0FFF;
-    }
-    printf("\nCurrent cluster: %u-%04X\n", currentCluster, currentCluster);
+    currentCluster = decode(FAT_OFFSET + (entry->startCluster - 2), fat);
+    printf("\nCurrent cluster: %u-%03X\n", currentCluster, currentCluster);
+    printEntry(entry);
 
     printf("\n");
 
