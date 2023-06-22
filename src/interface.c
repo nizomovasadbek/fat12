@@ -9,13 +9,14 @@ BootSector* _boot;
 
 void readSector(FILE* disk, uint32_t lba, uint32_t count, void* out) {
     if(lba)
-        fseek(disk, lba * 512, SEEK_SET);
-    fread(out, 512, count, disk);
+        fseek(disk, lba * _boot->bytesPerSector, SEEK_SET);
+    fread(out, _boot->bytesPerSector, count, disk);
 }
 
 bool readBootSector(BootSector* boot, FILE* disk) {
+    bool ok = fread(boot, sizeof(BootSector), 1, disk);
     _boot = boot;
-    return fread(boot, sizeof(BootSector), 1, disk);
+    return ok;
 }
 
 bool entryRead(Entry* entry, FILE* disk, uint16_t skip) {

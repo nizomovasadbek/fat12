@@ -5,5 +5,6 @@
 #define BOOTSECTOR_READ_ERROR 1
 #define ENTRY_READ_ERROR 2
 #define DISK_OPEN_ERROR 3
+#define SUCH_FILE_DOESNT_EXIST 4
 
 #endif

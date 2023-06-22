@@ -6,7 +6,6 @@
 #include "lib/error.h"
 
 int main(int argc, char** argv) {
-    char quit;
     if(argc != 2) {
         printf("Error syntax\n");
         printf("Use: <main> <disk image>\n");
@@ -40,7 +39,14 @@ int main(int argc, char** argv) {
     }
 
     uint32_t fileOrder = 0;
+    printf("Enter file number: ");
     scanf("%u", &fileOrder);
+    if(fileOrder > entryFilesCount || !fileOrder) {
+        free(boot);
+        free(entries);
+        printf("Such a file doesn't exist in disk\n");
+        return SUCH_FILE_DOESNT_EXIST;
+    }
     Entry* entry = &entries[fileOrder - 1];
 
     uint32_t capacity = entry->fileSize / boot->bytesPerSector;
@@ -54,7 +60,6 @@ int main(int argc, char** argv) {
     printf("\n%s\n", out);
 
     printf("\n");
-    scanf(" %c", &quit);
 
     free(out);
     free(boot);
