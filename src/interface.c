@@ -1,18 +1,20 @@
 #include "lib/interface.h"
 #include "lib/boot.h"
 #include "lib/entry.h"
+#include "lib/fat12.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-BootSector _boot;
+BootSector* _boot;
 
 void readSector(FILE* disk, uint32_t lba, uint32_t count, void* out) {
-    fseek(disk, lba * 512, SEEK_SET);
+    if(lba)
+        fseek(disk, lba * 512, SEEK_SET);
     fread(out, 512, count, disk);
 }
 
 bool readBootSector(BootSector* boot, FILE* disk) {
-    _boot = *boot;
+    _boot = boot;
     return fread(boot, sizeof(BootSector), 1, disk);
 }
 
@@ -33,4 +35,28 @@ uint16_t getEntryFilesCount(FILE* disk, uint16_t start) {
 
     free(entry);
     return count;
+}
+
+bool readFile(FILE* disk, Entry* entry, void* out) {
+    uint16_t fileStartSector = _boot->reserved;
+    uint16_t chain = 0;
+    uint16_t cluster = entry->startCluster;
+    uint8_t* fat = (uint8_t*) malloc(_boot->fatCount * _boot->sectorPerFat * _boot->bytesPerSector);
+    if(fat == NULL) return false;
+    fileStartSector += _boot->fatCount * _boot->sectorPerFat;
+    fileStartSector += (_boot->rootDirEntry * 32) / 512;
+    fileStartSector += entry->startCluster - 2;
+    readSector(disk, _boot->reserved, _boot->sectorPerFat * _boot->fatCount, fat);
+
+    do {
+        readSector(disk, fileStartSector, 1, out);
+        chain = decode(cluster, fat);
+        if(chain <= 0x0FF8)
+            out += _boot->bytesPerSector;
+        fileStartSector += chain - 2;
+        cluster = chain;
+    } while(chain <= 0x0FF8);
+
+    free(fat);
+    return true;
 }

@@ -1,13 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lib/boot.h"
-#include "lib/console.h"
 #include "lib/entry.h"
-#include "lib/fat12.h"
 #include "lib/interface.h"
 #include "lib/error.h"
-
-#define FAT_OFFSET 2
 
 int main(int argc, char** argv) {
     if(argc != 2) {
@@ -38,31 +34,28 @@ int main(int argc, char** argv) {
     uint16_t skip = entryStartSector;
     for(unsigned int i = 0; i < entryFilesCount; i++) {
         entryRead(&entries[i], disk, skip);
-        printf("%u) Filename: %s\t%u Kb\n", (i+1), entries[i].filename, entries[i].fileSize);
+        printf("%u) Filename: %s\t%u B\n", (i+1), entries[i].filename, entries[i].fileSize);
         skip += 32;
     }
 
     uint32_t fileOrder = 2;
-    //scanf("%u", &fileOrder);
+    // scanf("%u", &fileOrder);
     Entry* entry = &entries[fileOrder - 1];
 
-    uint8_t* fat = (uint8_t*) malloc(boot->bytesPerSector);
-    uint16_t currentCluster = entry->startCluster;
-    readSector(disk, boot->reserved, 1, fat);
-    
-    for(unsigned int i = 0; i < 12; i++) {
-        printf("%02X ", fat[i]);
-    }
+    uint32_t capacity = entry->fileSize / boot->bytesPerSector;
+    capacity += 2;
+    capacity *= boot->bytesPerSector;
+    uint8_t* out = (uint8_t*) malloc(capacity);
+    (void)readFile(disk, entry, out);
+    out[capacity-1] = 0;
 
-    currentCluster = decode(FAT_OFFSET + (entry->startCluster - 2), fat);
-    printf("\nCurrent cluster: %u-%03X\n", currentCluster, currentCluster);
-    printEntry(entry);
+    printf("\n%s\n", out);
 
     printf("\n");
 
+    free(out);
     free(boot);
     free(entries);
-    free(fat);
     fclose(disk);
     return 0;
 }

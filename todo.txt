@@ -1,0 +1,11 @@
+C++ basics
+C++ OOP
+C++ STL
+C++ smart pointers
+C/C++ Threads
+C/C++ Mutex
+C/C++ semaphores, shared memory
+C++ boost framework
+C++ Qt framework
+Reading from FAT12
+OS development
