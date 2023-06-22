@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
     if(fileOrder > entryFilesCount || !fileOrder) {
         free(boot);
         free(entries);
-        printf("Such a file doesn't exist in disk\n");
+        printf("File with that order doesn't exist!\n");
         return SUCH_FILE_DOESNT_EXIST;
     }
     Entry* entry = &entries[fileOrder - 1];
