@@ -45,6 +45,7 @@ bool readFile(FILE* disk, Entry* entry, void* out) {
     if(fat == NULL) return false;
     fileStartSector += _boot->fatCount * _boot->sectorPerFat;
     fileStartSector += (_boot->rootDirEntry * 32) / 512;
+    const uint16_t FIRST_STATE_CLUSTER = fileStartSector;
     fileStartSector += entry->startCluster - 2;
     readSector(disk, _boot->reserved, _boot->sectorPerFat * _boot->fatCount, fat);
 
@@ -53,6 +54,7 @@ bool readFile(FILE* disk, Entry* entry, void* out) {
         chain = decode(cluster, fat);
         if(chain <= 0x0FF8)
             out += _boot->bytesPerSector;
+        fileStartSector = FIRST_STATE_CLUSTER;
         fileStartSector += chain - 2;
         cluster = chain;
     } while(chain <= 0x0FF8);

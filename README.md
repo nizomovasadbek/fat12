@@ -3,6 +3,10 @@
 
 ```bash
 mkdir -p build && cd build
+```
+```bash
 cmake ..
+```
+```bash
 make
 ```

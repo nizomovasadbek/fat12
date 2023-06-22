@@ -41,11 +41,6 @@ add_custom_command(
 )
 add_custom_command(
     TARGET app POST_BUILD
-    COMMAND mcopy -i main.img ../main.ino "::main.ino"
-    COMMENT "Adding main.ino to disk"
-)
-add_custom_command(
-    TARGET app POST_BUILD
     COMMAND mcopy -i main.img ../todo.txt "::todo.txt"
     COMMENT "Adding todo.txt to disk"
 )

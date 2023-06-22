@@ -6,6 +6,7 @@
 #include "lib/error.h"
 
 int main(int argc, char** argv) {
+    char quit;
     if(argc != 2) {
         printf("Error syntax\n");
         printf("Use: <main> <disk image>\n");
@@ -38,13 +39,14 @@ int main(int argc, char** argv) {
         skip += 32;
     }
 
-    uint32_t fileOrder = 2;
-    // scanf("%u", &fileOrder);
+    uint32_t fileOrder = 0;
+    scanf("%u", &fileOrder);
     Entry* entry = &entries[fileOrder - 1];
 
     uint32_t capacity = entry->fileSize / boot->bytesPerSector;
-    capacity += 2;
+    capacity++;
     capacity *= boot->bytesPerSector;
+    capacity++;
     uint8_t* out = (uint8_t*) malloc(capacity);
     (void)readFile(disk, entry, out);
     out[capacity-1] = 0;
@@ -52,6 +54,7 @@ int main(int argc, char** argv) {
     printf("\n%s\n", out);
 
     printf("\n");
+    scanf(" %c", &quit);
 
     free(out);
     free(boot);
