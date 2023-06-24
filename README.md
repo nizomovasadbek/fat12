@@ -5,7 +5,7 @@
 mkdir -p build && cd build
 ```
 ```bash
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 ```
 ```bash
 make

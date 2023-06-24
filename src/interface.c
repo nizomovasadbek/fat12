@@ -10,7 +10,7 @@ BootSector* _boot;
 void readSector(FILE* disk, uint32_t lba, uint32_t count, void* out) {
     if(lba)
         fseek(disk, lba * _boot->bytesPerSector, SEEK_SET);
-    fread(out, _boot->bytesPerSector, count, disk);
+    (void)fread(out, _boot->bytesPerSector, count, disk);
 }
 
 bool readBootSector(BootSector* boot, FILE* disk) {
