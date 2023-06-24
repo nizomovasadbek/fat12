@@ -1,2 +1,4 @@
 build/
+debug/
+target/
 out.bin

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(app)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_C_STANDARD 11)
 file(GLOB SOURCES "src/*.c")
