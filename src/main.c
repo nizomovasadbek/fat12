@@ -34,14 +34,18 @@ int main(int argc, char** argv) {
     Entry* entries = (Entry*) calloc(entryFilesCount, sizeof(Entry));
     uint16_t skip = entryStartSector;
     for(unsigned int i = 0; i < entryFilesCount; i++) {
-        entryRead(&entries[i], disk, skip);
+        if(!entryRead(&entries[i], disk, skip)) {
+            printf("Warning couldn't read entry %s\n", entries[i].filename);
+            continue;
+        }
         printf("%u) Filename: %s\t%u B\n", (i+1), entries[i].filename, entries[i].fileSize);
         skip += 32;
     }
 
     uint32_t fileOrder = 0;
     printf("Enter file number: ");
-    scanf("%u", &fileOrder);
+    scanf("%u\n", &fileOrder);
+    
     if(fileOrder > entryFilesCount || !fileOrder) {
         free(boot);
         free(entries);

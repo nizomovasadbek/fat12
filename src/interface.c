@@ -7,10 +7,12 @@
 
 BootSector* _boot;
 
-void readSector(FILE* disk, uint32_t lba, uint32_t count, void* out) {
+bool readSector(FILE* disk, uint32_t lba, uint32_t count, void* out) {
+    bool ok = true;
     if(lba)
-        fseek(disk, lba * _boot->bytesPerSector, SEEK_SET);
-    (void)fread(out, _boot->bytesPerSector, count, disk);
+        ok = ok && fseek(disk, lba * _boot->bytesPerSector, SEEK_SET) == 0;
+    ok = ok && fread(out, _boot->bytesPerSector, count, disk) == count;
+    return ok;
 }
 
 bool readBootSector(BootSector* boot, FILE* disk) {
@@ -20,8 +22,10 @@ bool readBootSector(BootSector* boot, FILE* disk) {
 }
 
 bool entryRead(Entry* entry, FILE* disk, uint16_t skip) {
-    fseek(disk, skip, SEEK_SET);
-    return fread(entry, sizeof(Entry), 1, disk);
+    bool ok = true;
+    ok = ok && fseek(disk, skip, SEEK_SET) == 0;
+    ok = ok && fread(entry, sizeof(Entry), 1, disk) == 1;
+    return ok;
 }
 
 uint16_t getEntryFilesCount(FILE* disk, uint16_t start) {
@@ -48,10 +52,15 @@ bool readFile(FILE* disk, Entry* entry, void* out) {
     fileStartSector += (_boot->rootDirEntry * 32) / 512;
     const uint16_t FIRST_STATE_CLUSTER = fileStartSector;
     fileStartSector += entry->startCluster - 2;
-    readSector(disk, _boot->reserved, _boot->sectorPerFat * _boot->fatCount, fat);
+    if(!readSector(disk, _boot->reserved, 
+        _boot->sectorPerFat * _boot->fatCount, fat)) {
+            return false;
+        }
 
     do {
-        readSector(disk, fileStartSector, 1, out);
+        if(!readSector(disk, fileStartSector, 1, out)) {
+            return false;
+        }
         chain = decode(cluster, fat);
         if(chain <= 0x0FF8)
             out += _boot->bytesPerSector;

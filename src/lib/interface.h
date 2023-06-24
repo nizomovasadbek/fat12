@@ -9,7 +9,7 @@
 bool readBootSector(BootSector*, FILE*);
 bool entryRead(Entry*, FILE*, uint16_t);
 uint16_t getEntryFilesCount(FILE*, uint16_t);
-void readSector(FILE*, uint32_t, uint32_t, void*);
+bool readSector(FILE*, uint32_t, uint32_t, void*);
 bool readFile(FILE*, Entry*, void*);
 
 #endif
