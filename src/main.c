@@ -43,9 +43,11 @@ int main(int argc, char** argv) {
     }
 
     uint32_t fileOrder = 0;
+    char buffer[10];
     printf("Enter file number: ");
-    scanf("%u\n", &fileOrder);
-    
+    scanf("%9s", buffer);
+    sscanf(buffer, "%d", &fileOrder);
+
     if(fileOrder > entryFilesCount || !fileOrder) {
         free(boot);
         free(entries);
