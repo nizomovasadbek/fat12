@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
     (void)readFile(disk, entry, out);
     out[capacity-1] = 0;
 
-    printf("\n%s\n", out);
+    printf("\n%s", out);
 
     printf("\n");
 
