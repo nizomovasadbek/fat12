@@ -8,6 +8,10 @@ file(GLOB SOURCES "src/*.c")
 include_directories(src/lib)
 add_executable(app ${SOURCES})
 add_custom_command(
+	TARGET app POST_BUILD
+	COMMENT "Started post-build jobs"
+)
+add_custom_command(
     TARGET app POST_BUILD
     COMMAND touch main.img
     COMMENT "Creating main.img"
