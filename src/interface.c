@@ -54,11 +54,13 @@ bool readFile(FILE* disk, Entry* entry, void* out) {
     fileStartSector += entry->startCluster - 2;
     if(!readSector(disk, _boot->reserved, 
         _boot->sectorPerFat * _boot->fatCount, fat)) {
+            free(fat);
             return false;
         }
 
     do {
         if(!readSector(disk, fileStartSector, 1, out)) {
+            free(fat);
             return false;
         }
         chain = decode(cluster, fat);
